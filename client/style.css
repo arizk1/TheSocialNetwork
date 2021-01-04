@@ -1,3 +1,93 @@
 body {
     background-color: ghostwhite;
 }
+
+.newClass {
+    color: rebeccapurple;
+    font-size: 50px;
+}
+
+/* ################################## */
+/*              FORMS                 */
+/* ################################## */
+
+.form1 {
+    margin: 10px auto;
+    max-width: 400px;
+    padding: 20px 12px 10px 20px;
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+.form1 li {
+    padding: 0;
+    display: block;
+    list-style: none;
+    margin: 10px 0 0 0;
+}
+.form1 label {
+    margin: 0 0 3px 0;
+    padding: 0px;
+    display: block;
+    font-weight: bold;
+}
+.form1 input[type="text"],
+.form1 input[type="number"],
+.form1 input[type="password"],
+.form1 input[type="url"],
+.form1 input[type="email"] {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border: 1px solid #bebebe;
+    padding: 7px;
+    margin: 0px;
+    /* animation for the shadow! */
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    /* animation for the shadow! */
+    outline: none;
+}
+.form1 input[type="text"]:focus,
+.form1 input[type="password"]:focus,
+.form1 input[type="number"]:focus,
+.form1 input[type="url"]:focus,
+.form1 input[type="email"]:focus {
+    -moz-box-shadow: 0 0 8px rebeccapurple;
+    -webkit-box-shadow: 0 0 8px rebeccapurple;
+    box-shadow: 0 0 8px rebeccapurple;
+    border: 1px solid rebeccapurple;
+}
+.form1 .field-divided {
+    width: 49%;
+}
+
+.form1 .field-long {
+    width: 100%;
+}
+.form1 .field-select {
+    width: 100%;
+}
+.form1 .field-textarea {
+    height: 100px;
+}
+.form1 input[type="submit"],
+.form1 input[type="button"],
+.form1 input[type="edit"] {
+    background: #4b99ad;
+    padding: 8px 15px 8px 15px;
+    border: none;
+    color: #fff;
+}
+.form1 input[type="submit"]:hover,
+.form1 input[type="button"]:hover,
+.form1 input[type="edit"]:hover {
+    background: rebeccapurple;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    cursor: pointer;
+}
+.form1 .required {
+    color: red;
+}
