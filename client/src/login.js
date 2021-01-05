@@ -1,35 +1,26 @@
 import { Component } from "react";
 import axios from "./axios";
 
-export default class Registration extends Component {
+export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            first: "",
-            last: "",
-            email: "",
-            password: "",
             error: false,
         };
     }
+
     handleChange(e) {
         this.setState({
             [e.target.name]: e.target.value,
         });
     }
 
-    handleSubmit(e) {
+    handleLogIn(e) {
         e.preventDefault();
         console.log("working");
 
-        // var formData = new FormData();
-        // formData.append("first", this.state.first);
-        // formData.append("last", this.state.last);
-        // formData.append("email", this.state.email);
-        // formData.append("password", this.state.password);
-
         axios
-            .post("/registartion", this.state)
+            .post("/login", this.state)
             .then(() => {
                 location.replace("/");
             })
@@ -45,27 +36,8 @@ export default class Registration extends Component {
                 {this.state.error && (
                     <p>Something is wrong! Please check your input</p>
                 )}
-                <h2>Registration</h2>
+                <h2>Login</h2>
                 <ul className="form1">
-                    <li>
-                        <label>
-                            Full Name <span className="required">*</span>
-                        </label>
-                        <input
-                            onChange={(e) => this.handleChange(e)}
-                            type="text"
-                            name="first"
-                            className="field-divided"
-                            placeholder="First name"
-                        />
-                        <input
-                            onChange={(e) => this.handleChange(e)}
-                            type="text"
-                            name="last"
-                            className="field-divided"
-                            placeholder="Last name"
-                        />
-                    </li>
                     <li>
                         <label>
                             Email <span className="required">*</span>
@@ -92,9 +64,9 @@ export default class Registration extends Component {
                     </li>
                     <li>
                         <input
-                            onClick={(e) => this.handleSubmit(e)}
+                            onClick={(e) => this.handleLogIn(e)}
                             type="submit"
-                            value="Submit"
+                            value="Login"
                         />
                     </li>
                 </ul>

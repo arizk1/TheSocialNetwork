@@ -9,7 +9,7 @@ const path = require("path");
 const db = require("./db");
 const { hash, compare } = require("./bc");
 const cookieSession = require("cookie-session");
-// const csurf = require("csurf");
+const csurf = require("csurf");
 
 //##################################
 //######    MIDDLEWARES     #######
@@ -32,7 +32,12 @@ app.use(
     })
 );
 
-// app.use(csurf());
+app.use(csurf());
+
+app.use(function (req, res, next) {
+    res.cookie("mytoken", req.csrfToken());
+    next();
+});
 
 app.use(express.static("public"));
 
@@ -50,7 +55,7 @@ app.post("/registartion", (req, res) => {
                     console.log(rows);
                     req.session.userid = rows[0].id;
                     // req.session.logedin = true;
-                    // res.redirect("/");
+                    res.redirect("/");
                 })
                 .catch((err) => {
                     console.log("error in registration", err);
@@ -58,6 +63,31 @@ app.post("/registartion", (req, res) => {
         })
         .catch((err) => {
             console.log("error in hashing password", err);
+        });
+});
+
+app.post("/login", (req, res) => {
+    const { email, password } = req.body;
+    db.checkUserPW(email)
+        .then(({ rows }) => {
+            let hashedPW = rows[0].password;
+            compare(password, hashedPW).then((result) => {
+                console.log(result);
+                if (result) {
+                    db.getUserIdByEmail(email)
+                        .then(({ rows }) => {
+                            req.session.userid = rows[0].id;
+                        })
+                        .catch((err) => {
+                            console.log("error in logging", err);
+                        });
+                } else {
+                    throw Error;
+                }
+            });
+        })
+        .catch((err) => {
+            console.log("error in logging", err);
         });
 });
 
