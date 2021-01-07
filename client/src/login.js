@@ -1,5 +1,7 @@
 import { Component } from "react";
 import axios from "./axios";
+import { HashRouter, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default class Login extends Component {
     constructor(props) {
@@ -21,7 +23,8 @@ export default class Login extends Component {
 
         axios
             .post("/login", this.state)
-            .then(() => {
+            .then(({ data }) => {
+                this.setState({ data });
                 location.replace("/");
             })
             .catch((error) => {
@@ -70,6 +73,13 @@ export default class Login extends Component {
                         />
                     </li>
                 </ul>
+                <HashRouter>
+                    <>
+                        <Link to="/reset-password">
+                            click here if you forgot your password!
+                        </Link>
+                    </>
+                </HashRouter>
             </div>
         );
     }

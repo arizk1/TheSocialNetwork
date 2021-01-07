@@ -91,3 +91,21 @@ body {
 .form1 .required {
     color: red;
 }
+
+.profile-pic {
+    height: 70px;
+    width: 70px;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+}
+
+.profile-pic-uploader {
+    height: 30%;
+    width: 40%;
+    background-color: rgb(65, 105, 225, 0.5);
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}

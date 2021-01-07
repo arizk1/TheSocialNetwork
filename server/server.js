@@ -10,6 +10,12 @@ const db = require("./db");
 const { hash, compare } = require("./bc");
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
+const cryptoRandomString = require("crypto-random-string");
+const { sendEmail } = require("./ses");
+const s3 = require("./s3");
+const { s3Url } = require("./config");
+const multer = require("multer");
+const uidSafe = require("uid-safe");
 
 //##################################
 //######    MIDDLEWARES     #######
@@ -24,6 +30,26 @@ app.use(
         extended: false,
     })
 );
+
+const diskStorage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, "uploads");
+    },
+    filename: function (req, file, callback) {
+        uidSafe(24)
+            .then((uid) => {
+                callback(null, uid + path.extname(file.originalname));
+            })
+            .catch((err) => callback(err));
+    },
+});
+
+const uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2097152,
+    },
+});
 
 app.use(
     cookieSession({
@@ -52,17 +78,19 @@ app.post("/registartion", (req, res) => {
             console.log(hashedPW);
             db.addUser(first, last, email, hashedPW)
                 .then(({ rows }) => {
-                    console.log(rows);
+                    // console.log(rows);
                     req.session.userid = rows[0].id;
                     // req.session.logedin = true;
-                    res.redirect("/");
+                    res.json({ sucess: true });
                 })
                 .catch((err) => {
                     console.log("error in registration", err);
+                    res.json({ error: true });
                 });
         })
         .catch((err) => {
             console.log("error in hashing password", err);
+            res.json({ error: true });
         });
 });
 
@@ -77,22 +105,110 @@ app.post("/login", (req, res) => {
                     db.getUserIdByEmail(email)
                         .then(({ rows }) => {
                             req.session.userid = rows[0].id;
+                            res.json({ sucess: true });
                         })
                         .catch((err) => {
                             console.log("error in logging", err);
+                            res.json({ error: true });
                         });
                 } else {
-                    throw Error;
+                    return;
                 }
             });
         })
         .catch((err) => {
             console.log("error in logging", err);
+            res.json({ error: true });
         });
 });
 
+app.post("/password/reset/start", (req, res) => {
+    const { email } = req.body;
+    if (email == null) {
+        res.json({ error: true });
+    }
+    db.getUserIdByEmail(email)
+        .then(({ rows }) => {
+            console.log(rows);
+            const secretCode = cryptoRandomString({
+                length: 6,
+            });
+            console.log(secretCode);
+            db.addCode(email, secretCode).then(({ rows }) => {
+                console.log({ rows });
+                sendEmail(
+                    "arizk1+1@outlook.com",
+                    rows[0].code,
+                    "here is your code to reset your password"
+                )
+                    .then(() => {
+                        res.json({ sucess: true });
+                    })
+                    .catch((err) => {
+                        console.log("error in sending email", err);
+                        res.json({ error: true });
+                    });
+            });
+        })
+        .catch((err) => {
+            console.log("error in getting email", err);
+            res.json({ error: true });
+        });
+});
+
+app.post("/password/reset/verify", (req, res) => {
+    const { password, code } = req.body;
+    db.compareCodes(code)
+        .then(({ rows }) => {
+            console.log(rows);
+            hash(password).then((hashedPW) => {
+                console.log(hashedPW);
+                db.editPassword(hashedPW, req.session.userid)
+                    .then(({ rows }) => {
+                        console.log(rows);
+                        res.json({ sucess: true });
+                    })
+                    .catch((err) => {
+                        console.log("error in editing the password", err);
+                        res.json({ error: true });
+                    });
+            });
+        })
+        .catch((err) => {
+            console.log("error in comparing the codes", err);
+            res.json({ error: true });
+        });
+});
+
+app.get("/user", (req, res) => {
+    db.getUserData(req.session.userid)
+        .then(({ rows }) => {
+            // console.log(rows);
+            res.json(rows);
+        })
+        .catch((err) => console.log("error", err));
+});
+
+app.post("/profilePic", uploader.single("image"), s3.upload, (req, res) => {
+    const { filename } = req.file;
+    const url = s3Url + filename;
+    const userId = req.session.userid;
+    if (req.file) {
+        db.addProfilePic(url, userId)
+            .then(({ rows }) => {
+                res.json(rows[0]);
+            })
+            .catch((err) => {
+                console.log("error adding profile pic", err);
+                res.json({ error: true });
+            });
+    } else {
+        res.json({ error: true });
+    }
+});
+
 app.get("/welcome", (req, res) => {
-    if (req.session.userId) {
+    if (req.session.userid) {
         res.redirect("/");
     } else {
         res.sendFile(path.join(__dirname, "..", "client", "index.html"));
@@ -100,7 +216,7 @@ app.get("/welcome", (req, res) => {
 });
 
 app.get("*", function (req, res) {
-    if (!req.session.userId) {
+    if (!req.session.userid) {
         res.redirect("/welcome");
     } else {
         res.sendFile(path.join(__dirname, "..", "client", "index.html"));

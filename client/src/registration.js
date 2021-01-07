@@ -5,10 +5,6 @@ export default class Registration extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            first: "",
-            last: "",
-            email: "",
-            password: "",
             error: false,
         };
     }
@@ -22,15 +18,12 @@ export default class Registration extends Component {
         e.preventDefault();
         console.log("working");
 
-        // var formData = new FormData();
-        // formData.append("first", this.state.first);
-        // formData.append("last", this.state.last);
-        // formData.append("email", this.state.email);
-        // formData.append("password", this.state.password);
-
         axios
             .post("/registartion", this.state)
-            .then(() => {
+            .then(({ data }) => {
+                // console.log(res);
+                // debugger;
+                this.setState({ data });
                 location.replace("/");
             })
             .catch((error) => {
