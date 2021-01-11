@@ -93,8 +93,8 @@ body {
 }
 
 .profile-pic {
-    height: 70px;
-    width: 70px;
+    height: 90px;
+    width: 90px;
     position: absolute;
     top: 20px;
     right: 10px;
@@ -108,4 +108,11 @@ body {
     padding: 10px;
     display: flex;
     justify-content: center;
+}
+
+.profile-pic-container .profile-pic {
+    height: 250px !important;
+    width: 250px !important;
+    position: relative;
+    left: 20px;
 }

@@ -13,8 +13,8 @@ export default class Uploader extends Component {
     }
 
     handleFileChange(e) {
-        console.log("changeeeee!");
-        console.log(e.target.files[0]);
+        // console.log("changeeeee!");
+        // console.log(e.target.files[0]);
         this.setState({
             image: e.target.files[0],
         });
@@ -22,7 +22,7 @@ export default class Uploader extends Component {
 
     handleUpload(e) {
         e.preventDefault();
-        console.log("upload button is working!");
+        // console.log("upload button is working!");
         var formData = new FormData();
         formData.append("image", this.state.image);
         // if (this.state.profilePic) {

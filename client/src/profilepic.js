@@ -6,7 +6,7 @@ export default function ProfilePic({
     profile_pic,
     toggleUploader,
 }) {
-    console.log("props in ProfilePic: ", first, last);
+    // console.log("props in ProfilePic: ", first, last);
     return (
         <div>
             {profile_pic && (
@@ -14,7 +14,7 @@ export default function ProfilePic({
                     className="profile-pic"
                     onClick={toggleUploader}
                     src={profile_pic}
-                    alt={first + " " + last}
+                    alt={`${first}${last}`}
                 />
             )}
             {!profile_pic && (

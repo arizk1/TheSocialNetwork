@@ -31,9 +31,11 @@ app.use(
     })
 );
 
+app.use(express.urlencoded({ extended: false }));
+
 const diskStorage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, "uploads");
+        callback(null, path.resolve(__dirname + "/uploads"));
     },
     filename: function (req, file, callback) {
         uidSafe(24)
@@ -137,7 +139,7 @@ app.post("/password/reset/start", (req, res) => {
             db.addCode(email, secretCode).then(({ rows }) => {
                 console.log({ rows });
                 sendEmail(
-                    "arizk1+1@outlook.com",
+                    "arizk991@gmail.com",
                     rows[0].code,
                     "here is your code to reset your password"
                 )
@@ -200,6 +202,24 @@ app.post("/profilePic", uploader.single("image"), s3.upload, (req, res) => {
             })
             .catch((err) => {
                 console.log("error adding profile pic", err);
+                res.json({ error: true });
+            });
+    } else {
+        res.json({ error: true });
+    }
+});
+
+app.post("/update-bio", (req, res) => {
+    const { draftBio } = req.body;
+    console.log(draftBio);
+    const userId = req.session.userid;
+    if (req.body) {
+        db.updateBio(draftBio, userId)
+            .then(({ rows }) => {
+                res.json(rows[0]);
+            })
+            .catch((err) => {
+                console.log("error adding bio", err);
                 res.json({ error: true });
             });
     } else {

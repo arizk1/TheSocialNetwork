@@ -15,7 +15,7 @@ const s3 = new aws.S3({
 
 module.exports.upload = (req, res, next) => {
     const { filename, mimetype, size, path } = req.file;
-
+    console.log("Path", path);
     const promise = s3
         .putObject({
             Bucket: "arizkbucket",
