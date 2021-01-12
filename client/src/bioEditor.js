@@ -39,7 +39,10 @@ export default class BioEditor extends Component {
             <div>
                 {this.state.textareaVisiable && (
                     <>
-                        <textarea onChange={(e) => this.handleChange(e)} />
+                        <textarea
+                            defaultValue={this.props.bio}
+                            onChange={(e) => this.handleChange(e)}
+                        />
                         <button onClick={() => this.handelBioAdding()}>
                             Save Bio
                         </button>

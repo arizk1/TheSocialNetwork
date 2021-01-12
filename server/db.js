@@ -30,6 +30,17 @@ module.exports.getUserData = (userId) => {
     return db.query(q, params);
 };
 
+module.exports.getRecentUsers = () => {
+    const q = `SELECT * FROM users ORDER BY id DESC LIMIT 3`;
+    return db.query(q);
+};
+
+module.exports.searchFor = (first) => {
+    const q = `SELECT * FROM users WHERE first ILIKE $1;`;
+    const params = [first + "%"];
+    return db.query(q, params);
+};
+
 module.exports.addCode = (email, code) => {
     const q = `INSERT INTO reset_codes (email, code) 
     VALUES ($1, $2) 

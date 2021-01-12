@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import axios from "./axios";
+import BioEditor from "./bioEditor";
+import ProfilePic from "./profilepic";
 
 export default class OtherProfile extends Component {
     constructor(props) {
@@ -7,22 +9,33 @@ export default class OtherProfile extends Component {
         this.state = {};
     }
 
-    componentDidMount() {
-        const userId = this.props.match.params.id;
-        console.log(
-            "this.props.match.params",
-            this.props.match.params,
-            "userID: ",
-            userId
-        );
-        //axious request
-
-        // if (this.props.match.params.id == this.props.id)
+    componentDidMount(curentUser) {
+        console.log(curentUser);
+        if (this.props.match.params.id == this.props.id) {
+            this.props.history.push("/");
+        } else {
+            axios
+                .get("/user-data/" + this.props.match.params.id)
+                .then(({ data }) => {
+                    console.log(data[0]);
+                    this.setState({ ...data[0] });
+                })
+                .catch((error) =>
+                    console.log("error in geting /user-data", error)
+                );
+        }
     }
     render() {
         return (
             <>
-                <h2>Other Profile</h2>
+                <div className="profile-container">
+                    <img src={this.state.profile_pic} />
+
+                    <h3>
+                        {this.state.first} {this.state.last}
+                    </h3>
+                    <p> {this.state.bio} </p>
+                </div>
             </>
         );
     }

@@ -227,6 +227,33 @@ app.post("/update-bio", (req, res) => {
     }
 });
 
+app.get(`/user-data/:id`, (req, res) => {
+    console.log(req.params.id);
+    db.getUserData(req.params.id)
+        .then(({ rows }) => {
+            res.json(rows);
+        })
+        .catch((err) => console.log("error in getting other profile:", err));
+});
+
+app.get(`/find/recent/users`, (req, res) => {
+    db.getRecentUsers()
+        .then(({ rows }) => {
+            res.json(rows);
+        })
+        .catch((err) => console.log("error in getting recent users:", err));
+});
+
+app.get(`/find/users/:query`, (req, res) => {
+    const { query } = req.params;
+    const first = query.replace(/^:+/, "");
+    db.searchFor(first)
+        .then(({ rows }) => {
+            res.json(rows);
+        })
+        .catch((err) => console.log("error in searching for people", err));
+});
+
 app.get("/welcome", (req, res) => {
     if (req.session.userid) {
         res.redirect("/");

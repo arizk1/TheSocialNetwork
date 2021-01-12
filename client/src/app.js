@@ -3,8 +3,9 @@ import ProfilePic from "./profilepic";
 import Uploader from "./uploader";
 import axios from "./axios";
 import Profile from "./profile";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Link } from "react-router-dom";
 import OtherProfile from "./otherProfile";
+import FindUsers from "./findUsers";
 
 export default class App extends Component {
     constructor() {
@@ -79,6 +80,11 @@ export default class App extends Component {
                                 last={this.state.last}
                                 profile_pic={this.state.profile_pic}
                             />
+                        </div>
+
+                        <div className="find-users">
+                            <Link to="/users">Find Usres</Link>
+                            <Route path="/users" render={() => <FindUsers />} />
                         </div>
                         <Route
                             exact

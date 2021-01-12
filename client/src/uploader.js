@@ -44,7 +44,9 @@ export default class Uploader extends Component {
             <div className="profile-pic-uploader">
                 <div>
                     <h3>Upload new profile picture</h3>
-                    <h5 className="x">x</h5>
+                    <h5 onClick={(e) => this.handleUpload(e)} className="x">
+                        x
+                    </h5>
                     <input
                         name="image"
                         type="file"
