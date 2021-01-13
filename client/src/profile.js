@@ -11,16 +11,18 @@ export default function Profile({
     toggleUploader,
 }) {
     return (
-        <div>
-            <h2>Profile Component</h2>
+        <section>
+            <div className="profile-pic-container">
+                <ProfilePic
+                    profile_pic={profile_pic}
+                    toggleUploader={toggleUploader}
+                />
+            </div>
             <h3>
                 My name is {first} {last}
             </h3>
-            <ProfilePic
-                profile_pic={profile_pic}
-                toggleUploader={toggleUploader}
-            />
+
             <BioEditor bio={bio} addBio={addBio} />
-        </div>
+        </section>
     );
 }

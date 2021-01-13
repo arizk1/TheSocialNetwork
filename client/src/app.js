@@ -68,24 +68,33 @@ export default class App extends Component {
             return null;
         }
         return (
-            <BrowserRouter>
-                <div>
-                    <div className="profile-container">
-                        <h1>LOGO</h1>
+            <>
+                <BrowserRouter>
+                    <div className="app-container">
+                        <section className="topnav">
+                            <div className="logo">
+                                <img src="/logo.png" />
+                            </div>
+                            <div className="topnav-links">
+                                <Link to="/users">Find Usres</Link>
+                                <Link to="/logout">LogOut</Link>
+                            </div>
+                            <div className="topnav-pic">
+                                <ProfilePic
+                                    toggleUploader={this.toggleUploader}
+                                    first={this.state.first}
+                                    last={this.state.last}
+                                    profile_pic={this.state.profile_pic}
+                                />
+                            </div>
+                        </section>
 
-                        <div className="profile-pic-container">
-                            <ProfilePic
-                                toggleUploader={this.toggleUploader}
-                                first={this.state.first}
-                                last={this.state.last}
-                                profile_pic={this.state.profile_pic}
-                            />
-                        </div>
+                        {this.state.uploaderIsVisible && (
+                            <Uploader setImage={this.setImage} />
+                        )}
 
-                        <div className="find-users">
-                            <Link to="/users">Find Usres</Link>
-                            <Route path="/users" render={() => <FindUsers />} />
-                        </div>
+                        <Route path="/users" render={() => <FindUsers />} />
+
                         <Route
                             exact
                             path="/"
@@ -111,13 +120,9 @@ export default class App extends Component {
                                 />
                             )}
                         />
-
-                        {this.state.uploaderIsVisible && (
-                            <Uploader setImage={this.setImage} />
-                        )}
                     </div>
-                </div>
-            </BrowserRouter>
+                </BrowserRouter>
+            </>
         );
     }
 }

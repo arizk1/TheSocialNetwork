@@ -98,6 +98,8 @@ body {
     position: absolute;
     top: 20px;
     right: 10px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .profile-pic-uploader {
@@ -115,4 +117,5 @@ body {
     width: 250px !important;
     position: relative;
     left: 20px;
+    border-radius: 0%;
 }

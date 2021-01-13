@@ -120,7 +120,10 @@ app.post("/login", (req, res) => {
             });
         })
         .catch((err) => {
-            console.log("error in logging", err);
+            console.log(
+                "error in logging, Email or Password is incorrect",
+                err
+            );
             res.json({ error: true });
         });
 });
@@ -264,17 +267,15 @@ const BUTTON_TEXT = {
 app.get("/friendship-status/:otherUserId", (req, res) => {
     const userId = req.session.userid;
     const { otherUserId } = req.params;
-
-    console.log("user id ===>", userId, "other user id ===>", otherUserId);
-
+    // console.log("user id ===>", userId, "other user id ===>", otherUserId);
     frindshipsDb
         .checkStatus(userId, otherUserId)
         .then(({ rows }) => {
-            console.log(rows[0]);
-            if (!rows[0].id) {
+            console.log(rows);
+            if (!rows[0]) {
                 res.json(BUTTON_TEXT.MAKE_REQUEST);
             }
-            if (rows[0].id) {
+            if (rows[0]) {
                 if (rows[0].accepted == true) {
                     res.json(BUTTON_TEXT.UNFRIEND);
                 } else if (rows[0].accepted == false) {
@@ -283,7 +284,6 @@ app.get("/friendship-status/:otherUserId", (req, res) => {
                     } else {
                         res.json(BUTTON_TEXT.ACCEPT_REQUEST);
                     }
-                    // if (rows[0].recipient_id == userId)
                 }
             }
         })
@@ -293,43 +293,36 @@ app.get("/friendship-status/:otherUserId", (req, res) => {
 app.post("/update/friendship-status", (req, res) => {
     const userId = req.session.userid;
     const { action, otherUserId } = req.body;
-    console.log("Other User ID", otherUserId);
-    console.log("ACTION! ", action);
 
     if (action === BUTTON_TEXT.MAKE_REQUEST) {
         frindshipsDb
             .makeRequest(userId, otherUserId)
-            .then(({ rows }) => {
-                console.log(rows);
-                // res.json(rows);
+            .then(() => {
+                res.json(BUTTON_TEXT.CANCEL_REQUEST);
             })
             .catch((err) => console.log("error in .. make Request", err));
     }
     if (action === BUTTON_TEXT.CANCEL_REQUEST) {
         frindshipsDb
             .cancelRequest(userId, otherUserId)
-            .then(({ rows }) => {
-                console.log("cancel");
-                console.log(rows);
-                // res.json(rows);
+            .then(() => {
+                res.json(BUTTON_TEXT.MAKE_REQUEST);
             })
             .catch((err) => console.log("error in .. cancelRequest", err));
     }
     if (action === BUTTON_TEXT.ACCEPT_REQUEST) {
         frindshipsDb
             .acceptFriend(userId, otherUserId)
-            .then(({ rows }) => {
-                console.log(rows);
-                // res.json(rows);
+            .then(() => {
+                res.json(BUTTON_TEXT.UNFRIEND);
             })
             .catch((err) => console.log("error in .. acceptFriend", err));
     }
     if (action === BUTTON_TEXT.UNFRIEND) {
         frindshipsDb
             .unfriend(userId, otherUserId)
-            .then(({ rows }) => {
-                console.log(rows);
-                // res.json(rows);
+            .then(() => {
+                res.json(BUTTON_TEXT.MAKE_REQUEST);
             })
             .catch((err) => console.log("error in .. unfriend", err));
     }
