@@ -7,6 +7,7 @@ const app = express();
 const compression = require("compression");
 const path = require("path");
 const db = require("./db");
+const frindshipsDb = require("./friendshipsDb");
 const { hash, compare } = require("./bc");
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
@@ -252,6 +253,86 @@ app.get(`/find/users/:query`, (req, res) => {
             res.json(rows);
         })
         .catch((err) => console.log("error in searching for people", err));
+});
+
+const BUTTON_TEXT = {
+    MAKE_REQUEST: "Send Friend Request",
+    CANCEL_REQUEST: "Cancel Friend Request",
+    ACCEPT_REQUEST: "Accept Friend Request",
+    UNFRIEND: "Unfriend",
+};
+app.get("/friendship-status/:otherUserId", (req, res) => {
+    const userId = req.session.userid;
+    const { otherUserId } = req.params;
+
+    console.log("user id ===>", userId, "other user id ===>", otherUserId);
+
+    frindshipsDb
+        .checkStatus(userId, otherUserId)
+        .then(({ rows }) => {
+            console.log(rows[0]);
+            if (!rows[0].id) {
+                res.json(BUTTON_TEXT.MAKE_REQUEST);
+            }
+            if (rows[0].id) {
+                if (rows[0].accepted == true) {
+                    res.json(BUTTON_TEXT.UNFRIEND);
+                } else if (rows[0].accepted == false) {
+                    if (rows[0].sender_id == userId) {
+                        res.json(BUTTON_TEXT.CANCEL_REQUEST);
+                    } else {
+                        res.json(BUTTON_TEXT.ACCEPT_REQUEST);
+                    }
+                    // if (rows[0].recipient_id == userId)
+                }
+            }
+        })
+        .catch((err) => console.log("error in .. /friendship-status", err));
+});
+
+app.post("/update/friendship-status", (req, res) => {
+    const userId = req.session.userid;
+    const { action, otherUserId } = req.body;
+    console.log("Other User ID", otherUserId);
+    console.log("ACTION! ", action);
+
+    if (action === BUTTON_TEXT.MAKE_REQUEST) {
+        frindshipsDb
+            .makeRequest(userId, otherUserId)
+            .then(({ rows }) => {
+                console.log(rows);
+                // res.json(rows);
+            })
+            .catch((err) => console.log("error in .. make Request", err));
+    }
+    if (action === BUTTON_TEXT.CANCEL_REQUEST) {
+        frindshipsDb
+            .cancelRequest(userId, otherUserId)
+            .then(({ rows }) => {
+                console.log("cancel");
+                console.log(rows);
+                // res.json(rows);
+            })
+            .catch((err) => console.log("error in .. cancelRequest", err));
+    }
+    if (action === BUTTON_TEXT.ACCEPT_REQUEST) {
+        frindshipsDb
+            .acceptFriend(userId, otherUserId)
+            .then(({ rows }) => {
+                console.log(rows);
+                // res.json(rows);
+            })
+            .catch((err) => console.log("error in .. acceptFriend", err));
+    }
+    if (action === BUTTON_TEXT.UNFRIEND) {
+        frindshipsDb
+            .unfriend(userId, otherUserId)
+            .then(({ rows }) => {
+                console.log(rows);
+                // res.json(rows);
+            })
+            .catch((err) => console.log("error in .. unfriend", err));
+    }
 });
 
 app.get("/welcome", (req, res) => {

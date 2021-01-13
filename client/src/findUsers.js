@@ -33,7 +33,7 @@ export default function FindUsers() {
     }, [query]);
 
     return (
-        <div>
+        <section>
             <h1>Our amazing users!</h1>
 
             {!query && (
@@ -70,6 +70,6 @@ export default function FindUsers() {
                     {!users.length && query && <p>Nothing Found</p>}
                 </>
             )}
-        </div>
+        </section>
     );
 }

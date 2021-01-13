@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "./axios";
 import BioEditor from "./bioEditor";
+import FriendshipButton from "./friendship_button";
 import ProfilePic from "./profilepic";
 
 export default class OtherProfile extends Component {
@@ -35,6 +36,8 @@ export default class OtherProfile extends Component {
                         {this.state.first} {this.state.last}
                     </h3>
                     <p> {this.state.bio} </p>
+
+                    <FriendshipButton otherUserId={this.state.id} />
                 </div>
             </>
         );
