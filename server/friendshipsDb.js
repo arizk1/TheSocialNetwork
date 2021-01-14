@@ -3,14 +3,25 @@ const db = spicedPg(
     process.env.DATABASE_URL ||
         `postgres:postgres:postgres@localhost:5432/socialNet`
 );
-//GET ROUTE
+//GET ROUTES
 module.exports.checkStatus = (UserId, OtherUserId) => {
     const q = `SELECT * FROM friendships WHERE (recipient_id = $1 AND sender_id = $2) OR (recipient_id = $2 AND sender_id = $1);`;
     const params = [UserId, OtherUserId];
     return db.query(q, params);
 };
 
-//POST ROUTE
+module.exports.getFriends = (userId) => {
+    const q = `  SELECT users.id, first, last, profile_pic, accepted
+  FROM friendships
+  JOIN users
+  ON (accepted = false AND recipient_id = $1 AND sender_id = users.id)
+  OR (accepted = true AND recipient_id = $1 AND sender_id = users.id)
+  OR (accepted = true AND sender_id = $1 AND recipient_id = users.id)`;
+    const params = [userId];
+    return db.query(q, params);
+};
+
+//POST ROUTES
 module.exports.makeRequest = (UserId, OtherUserId) => {
     const q = `INSERT INTO friendships (sender_id, recipient_id) VALUES ($1, $2) RETURNING *;`;
     const params = [UserId, OtherUserId];

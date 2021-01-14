@@ -328,6 +328,39 @@ app.post("/update/friendship-status", (req, res) => {
     }
 });
 
+app.get("/get-friends", (req, res) => {
+    const userId = req.session.userid;
+    frindshipsDb
+        .getFriends(userId)
+        .then(({ rows }) => {
+            // console.log(rows);
+            res.json(rows);
+        })
+        .catch((err) => console.log("error in .. /get-friends", err));
+});
+
+app.post("/unfriend", (req, res) => {
+    const userId = req.session.userid;
+    const { otherUserId } = req.body;
+
+    frindshipsDb
+        .unfriend(userId, otherUserId)
+        .then(() => {
+            res.json({ success: true });
+        })
+        .catch((err) => console.log("error in .. /unfriend", err));
+});
+app.post("/accept", (req, res) => {
+    const userId = req.session.userid;
+    const { otherUserId } = req.body;
+    frindshipsDb
+        .acceptFriend(userId, otherUserId)
+        .then(() => {
+            res.json({ success: true });
+        })
+        .catch((err) => console.log("error in .. /accept", err));
+});
+
 app.get("/welcome", (req, res) => {
     if (req.session.userid) {
         res.redirect("/");

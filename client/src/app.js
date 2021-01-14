@@ -6,6 +6,7 @@ import Profile from "./profile";
 import { BrowserRouter, Route, Link } from "react-router-dom";
 import OtherProfile from "./otherProfile";
 import FindUsers from "./findUsers";
+import Friends from "./friends";
 
 export default class App extends Component {
     constructor() {
@@ -73,12 +74,20 @@ export default class App extends Component {
                     <div className="app-container">
                         <section className="topnav">
                             <div className="logo">
-                                <img src="/logo.png" />
+                                <img src="/logo2.png" />
                             </div>
-                            <div className="topnav-links">
-                                <Link to="/users">Find Usres</Link>
-                                <Link to="/logout">LogOut</Link>
+                            <div className="topnavL">
+                                <div className="topnav-links">
+                                    <Link to="/users">Find Usres</Link>
+                                </div>
+                                <div className="topnav-links">
+                                    <Link to="/logout">LogOut</Link>
+                                </div>
+                                <div className="topnav-links">
+                                    <Link to="/friends">Friends</Link>
+                                </div>
                             </div>
+
                             <div className="topnav-pic">
                                 <ProfilePic
                                     toggleUploader={this.toggleUploader}
@@ -113,6 +122,19 @@ export default class App extends Component {
                             path="/user/:id"
                             render={(props) => (
                                 <OtherProfile
+                                    match={props.match}
+                                    key={props.match.url}
+                                    history={props.history}
+                                    id={this.state.id}
+                                />
+                            )}
+                        />
+
+                        <Route
+                            exact
+                            path="/friends"
+                            render={(props) => (
+                                <Friends
                                     match={props.match}
                                     key={props.match.url}
                                     history={props.history}

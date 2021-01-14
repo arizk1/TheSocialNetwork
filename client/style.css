@@ -6,6 +6,72 @@ body {
     color: rebeccapurple;
     font-size: 50px;
 }
+/* ################################## */
+/*              NAV BAR               */
+/* ################################## */
+
+.app-container {
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    grid-template-rows: 11% 89%;
+    gap: 0px;
+}
+
+.topnav {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    background-color: white;
+    /* position: absolute; */
+    top: 0px;
+    box-shadow: 0 5px 15px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.logo img {
+    justify-self: flex-start;
+    height: 70px;
+    width: 170px;
+    align-self: center;
+    padding: 5px;
+}
+
+.topnavL {
+    overflow: hidden;
+    position: absolute;
+    right: 10%;
+    display: flex;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+
+.topnav-links {
+    color: #f2f2f2;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav-pic {
+    right: 2%;
+    position: absolute;
+    align-items: center;
+    align-content: center;
+
+    display: flex;
+}
+
+.profile-pic {
+    height: 70px;
+    width: 70px;
+
+    object-fit: cover;
+    border-radius: 50%;
+}
 
 /* ################################## */
 /*              FORMS                 */
@@ -92,16 +158,6 @@ body {
     color: red;
 }
 
-.profile-pic {
-    height: 90px;
-    width: 90px;
-    position: absolute;
-    top: 20px;
-    right: 10px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
 .profile-pic-uploader {
     height: 30%;
     width: 40%;
@@ -118,4 +174,5 @@ body {
     position: relative;
     left: 20px;
     border-radius: 0%;
+    padding: 20px 0;
 }
