@@ -10,7 +10,6 @@ export default class BioEditor extends Component {
         };
     }
     handleChange(e) {
-        console.log("change event", e.target.value);
         this.setState({
             draftBio: e.target.value,
         });
@@ -19,8 +18,8 @@ export default class BioEditor extends Component {
         axios
             .post("/update-bio", this.state)
             .then(({ data }) => {
-                console.log("response", data);
                 this.props.addBio(data.bio);
+                this.handleAddorUpdate();
             })
             .catch((err) => {
                 console.log("error on POST /update-bio", err);
@@ -36,28 +35,36 @@ export default class BioEditor extends Component {
 
     render() {
         return (
-            <div>
+            <>
                 {this.state.textareaVisiable && (
-                    <>
+                    <div className="bio-button">
                         <textarea
+                            rows="4"
+                            cols="50"
                             defaultValue={this.props.bio}
                             onChange={(e) => this.handleChange(e)}
                         />
                         <button onClick={() => this.handelBioAdding()}>
-                            Save Bio
+                            Save
                         </button>
+                    </div>
+                )}
+                {!this.state.textareaVisiable && (
+                    <>
+                        <p className="bio">{this.props.bio}</p>
+
+                        <div className="bio-button">
+                            {this.props.addBio && (
+                                <button
+                                    onClick={() => this.handleAddorUpdate()}
+                                >
+                                    {this.props.bio ? "Update Bio" : "Add Bio"}
+                                </button>
+                            )}
+                        </div>
                     </>
                 )}
-                <>
-                    <p>{this.props.bio}</p>
-
-                    {this.props.addBio && (
-                        <button onClick={() => this.handleAddorUpdate()}>
-                            {this.props.bio ? "Update Bio" : "Add Bio"}
-                        </button>
-                    )}
-                </>
-            </div>
+            </>
         );
     }
 }

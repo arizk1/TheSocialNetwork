@@ -78,3 +78,50 @@ module.exports.updateBio = (bio, userId) => {
     const params = [bio, userId];
     return db.query(q, params);
 };
+
+module.exports.addChatMessage = (message, userId) => {
+    const q = `INSERT INTO chat_messages (message, sender_id) 
+    VALUES ($1, $2) 
+    RETURNING *`;
+    const params = [message, userId];
+    return db.query(q, params);
+};
+
+module.exports.getTenMostRecentMessages = () => {
+    const q = `SELECT chat_messages.message, chat_messages.id, chat_messages.sender_id, chat_messages.created_at, users.id, users.first, users.last, users.profile_pic
+  FROM chat_messages
+  JOIN users
+  ON chat_messages.sender_id = users.id
+  LIMIT 10`;
+    return db.query(q);
+};
+
+module.exports.deletefromChat = (userId) => {
+    const q = `DELETE FROM chat_messages WHERE sender_id = $1`;
+    const params = [userId];
+    return db.query(q, params);
+};
+module.exports.deletefriendships = (userId) => {
+    const q = `DELETE FROM friendships 
+    WHERE (recipient_id = $1 OR sender_id = $1)`;
+    const params = [userId];
+    return db.query(q, params);
+};
+module.exports.deletefromusers = (userId) => {
+    const q = `DELETE FROM users WHERE id = $1`;
+    const params = [userId];
+    return db.query(q, params);
+};
+
+module.exports.getUsersByIds = (arrayOfIds) => {
+    const query = `SELECT id, first, last, profile_pic FROM users WHERE id = ANY($1)`;
+    return db.query(query, [arrayOfIds]);
+};
+
+module.exports.getPrivateMessageFriendsList = (userId) => {
+    const q = `SELECT private_messages.sender_id, private_messages.recipient_id
+  FROM private_messages
+  WHERE (private_messages.sender_id = $1) OR (private_messages.recipient_id = $1)`;
+    const params = [userId];
+    return db.query(q, params);
+};

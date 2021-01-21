@@ -7,6 +7,9 @@ import { BrowserRouter, Route, Link } from "react-router-dom";
 import OtherProfile from "./otherProfile";
 import FindUsers from "./findUsers";
 import Friends from "./friends";
+import Chat from "./chat";
+import Welcome from "./welcome";
+import PrivateMessages from "./privateMessages";
 
 export default class App extends Component {
     constructor() {
@@ -36,6 +39,7 @@ export default class App extends Component {
                     last: data[0].last,
                     email: data[0].email,
                     profile_pic: data[0].profile_pic,
+                    bio: data[0].bio,
                 });
             })
             .catch((error) => {
@@ -58,6 +62,10 @@ export default class App extends Component {
         });
     }
 
+    logout() {
+        axios.get("/logout").then(() => location.replace("/welcome"));
+    }
+
     addBio(newBio) {
         this.setState({
             bio: newBio,
@@ -74,17 +82,28 @@ export default class App extends Component {
                     <div className="app-container">
                         <section className="topnav">
                             <div className="logo">
-                                <img src="/logo2.png" />
+                                <Link to="/">
+                                    <img src="/logo2.png" />
+                                </Link>
                             </div>
                             <div className="topnavL">
+                                {/* <div className="topnav-links">
+                                    <Link to="/message">messages</Link>
+                                </div> */}
                                 <div className="topnav-links">
                                     <Link to="/users">Find Usres</Link>
                                 </div>
-                                <div className="topnav-links">
-                                    <Link to="/logout">LogOut</Link>
-                                </div>
+
                                 <div className="topnav-links">
                                     <Link to="/friends">Friends</Link>
+                                </div>
+                                <div className="topnav-links">
+                                    <Link to="/chat">Chat</Link>
+                                </div>
+                                <div className="topnav-links">
+                                    <button onClick={() => this.logout()}>
+                                        Logout
+                                    </button>
                                 </div>
                             </div>
 
@@ -141,6 +160,28 @@ export default class App extends Component {
                                     id={this.state.id}
                                 />
                             )}
+                        />
+                        <Route
+                            exact
+                            path="/chat"
+                            render={(props) => (
+                                <Chat
+                                    match={props.match}
+                                    key={props.match.url}
+                                    history={props.history}
+                                    id={this.state.id}
+                                />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path="/logout"
+                            render={() => <Welcome />}
+                        />
+                        <Route
+                            exact
+                            path="/message"
+                            render={() => <PrivateMessages />}
                         />
                     </div>
                 </BrowserRouter>

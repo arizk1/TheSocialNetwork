@@ -1,10 +1,97 @@
 body {
-    background-color: ghostwhite;
+    background-color: #c0d9f4;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
-.newClass {
-    color: rebeccapurple;
-    font-size: 50px;
+.welcome {
+    height: 100vh;
+    width: 100vw;
+    background-image: linear-gradient(
+        to right,
+        #21086d,
+        #21086d 50%,
+        #c0d9f4 50%
+    );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.welcome-container {
+    width: 80%;
+    height: 80%;
+    border: 0px solid white;
+    background-image: linear-gradient(to right, white, white 50%, #c0d9f4 50%);
+    border-radius: 20px;
+    box-shadow: 0px 10px 30px 0px rgb(74, 73, 73);
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+}
+.welcome-img img {
+    /* background-image: url("/welcomepic.png"); */
+    height: 60%;
+    width: 60%;
+    opacity: 0.5;
+}
+.welcome-img {
+    position: absolute;
+    bottom: 10%;
+    /* z-index: 100; */
+}
+
+.welcome-text {
+    float: left;
+    font-family: "Luckiest Guy", cursive;
+    position: absolute;
+    left: 10%;
+    top: 20%;
+    max-width: 50vh;
+    /* z-index: 1000; */
+}
+
+.welcome-table {
+    /* float: right; */
+    position: absolute;
+    top: 40%;
+    left: 60vw;
+    transform: translate(-50%, -50%);
+    padding-top: 50px;
+}
+
+.welcome-table h2 {
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    position: relative;
+    padding: 20px 0 0 20px;
+    font-weight: bolder;
+    font-size: xx-large;
+}
+
+.welcome-table h1 {
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-weight: bolder;
+    font-size: x-large;
+    padding: 30px 0;
+}
+.welcome-table h4 {
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    /* padding-top: 10px; */
+    /* padding-left: 20px; */
+    font-weight: bold;
+    font-size: large;
+}
+
+.welcome-text h2 {
+    font-size: 3vw;
+    text-align: center;
+    padding: 20px;
+}
+
+.welcome-text h4 {
+    font-size: 2vw;
+    text-align: center;
 }
 /* ################################## */
 /*              NAV BAR               */
@@ -48,12 +135,24 @@ body {
 }
 
 .topnav-links {
-    color: #f2f2f2;
     color: black;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+.topnav-links button {
+    color: black;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    padding: 0px 0px;
+    text-decoration: underline;
+    font-size: 17px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    cursor: pointer;
 }
 
 .topnav-pic {
@@ -68,7 +167,6 @@ body {
 .profile-pic {
     height: 70px;
     width: 70px;
-
     object-fit: cover;
     border-radius: 50%;
 }
@@ -78,7 +176,7 @@ body {
 /* ################################## */
 
 .form1 {
-    margin: 10px auto;
+    margin: auto;
     max-width: 400px;
     padding: 20px 12px 10px 20px;
     font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
@@ -119,10 +217,10 @@ body {
 .form1 input[type="number"]:focus,
 .form1 input[type="url"]:focus,
 .form1 input[type="email"]:focus {
-    -moz-box-shadow: 0 0 8px rebeccapurple;
-    -webkit-box-shadow: 0 0 8px rebeccapurple;
-    box-shadow: 0 0 8px rebeccapurple;
-    border: 1px solid rebeccapurple;
+    -moz-box-shadow: 0 0 8px #21086d;
+    -webkit-box-shadow: 0 0 8px #21086d;
+    box-shadow: 0 0 8px #21086d;
+    border: 1px solid #21086d;
 }
 .form1 .field-divided {
     width: 49%;
@@ -140,15 +238,15 @@ body {
 .form1 input[type="submit"],
 .form1 input[type="button"],
 .form1 input[type="edit"] {
-    background: #4b99ad;
-    padding: 8px 15px 8px 15px;
+    background: #21086d;
+    padding: 8px 30px 8px 30px;
     border: none;
     color: #fff;
 }
 .form1 input[type="submit"]:hover,
 .form1 input[type="button"]:hover,
 .form1 input[type="edit"]:hover {
-    background: rebeccapurple;
+    background: #21086d;
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
@@ -158,21 +256,289 @@ body {
     color: red;
 }
 
+/* ################################## */
+/*              Profile                 */
+/* ################################## */
+
 .profile-pic-uploader {
-    height: 30%;
-    width: 40%;
-    background-color: rgb(65, 105, 225, 0.5);
+    position: absolute;
+    height: 20%;
+    width: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255, 255, 255, 0.5);
     margin: auto;
     padding: 10px;
     display: flex;
     justify-content: center;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 10000;
 }
 
+.profile-pic-uploader button {
+    background: #21086d;
+    padding: 8px 30px 8px 30px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+.profile-pic-uploader h3 {
+    padding-bottom: 30px;
+}
+/* .profile-pic-uploader input {
+    background: #c0d9f4;
+    padding: 8px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+} */
 .profile-pic-container .profile-pic {
     height: 250px !important;
     width: 250px !important;
     position: relative;
+    object-fit: cover;
     left: 20px;
-    border-radius: 0%;
+    border-radius: 20%;
     padding: 20px 0;
+}
+
+.profile-name {
+    padding: 0 20px 20px 20px;
+}
+
+.bio-button button {
+    display: inline;
+    color: black;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    padding: 0px 0px;
+    text-decoration: underline;
+    font-size: 17px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    cursor: pointer;
+}
+
+.profile-container img {
+    height: 350px;
+    width: 250px;
+    position: relative;
+    /* object-fit: cover; */
+    left: 20px;
+    border-radius: 10%;
+    padding: 20px 0 0 0;
+}
+
+.profile-container p {
+    width: 350px;
+    position: relative;
+    left: 20px;
+}
+
+.profile-container h3 {
+    width: 350px;
+    position: relative;
+    left: 20px;
+}
+
+.profile-container button {
+    background: #21086d;
+    padding: 8px 30px 8px 30px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    left: 20px;
+}
+
+/* ################################## */
+/*              friends                 */
+/* ################################## */
+.friends-container {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    position: relative;
+    padding-bottom: 70px;
+}
+
+.friends-container h2 {
+    padding: 15px 0px;
+    position: absolute;
+    top: 190px;
+    /* background-color: #f5eaed; */
+    width: 100%;
+    opacity: 0.7;
+    font-size: 15px;
+    font-weight: lighter;
+    text-align: center;
+}
+
+.friends-container img {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    width: 100%;
+    height: 200px;
+    background-color: white;
+    object-fit: cover;
+}
+
+.card {
+    position: relative;
+    /* background-color: #ffffff; */
+    color: #211e1e;
+    margin: 20px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    width: 180px;
+    height: 200px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.search {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border: 1px solid #bebebe;
+    padding: 7px;
+    margin: 0px;
+    /* animation for the shadow! */
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    /* animation for the shadow! */
+    outline: none;
+}
+.search:hover {
+    -moz-box-shadow: 0 0 8px #21086d;
+    -webkit-box-shadow: 0 0 8px #21086d;
+    box-shadow: 0 0 8px #21086d;
+    border: 1px solid #21086d;
+}
+
+.friends-buttons {
+    position: relative;
+    top: 45px;
+}
+
+.friends-buttons button {
+    background: #21086d;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    justify-content: center;
+    align-self: center;
+}
+.friends-buttons #remove {
+    background: gray;
+    left: 5px;
+}
+
+.friends-buttons .unfriend {
+    left: 25px;
+    background: gray;
+}
+.friends-buttons #unfriend {
+    left: 40px;
+    background: gray;
+}
+
+.friends-buttons .unfriend:hover,
+.friends-buttons #unfriend:hover,
+.friends-buttons #remove:hover {
+    background: rgb(145, 24, 24);
+}
+
+.friends-buttons button:hover {
+    background: royalblue;
+}
+.friends,
+.wanabes,
+.pending {
+    position: relative;
+    margin: 20px;
+    border-radius: 5px;
+    background-color: rgb(181, 185, 198);
+    padding: 20px;
+}
+
+.chat-container {
+    /* background-color: salmon; */
+    position: absolute;
+    left: 30px;
+    top: 200px;
+    width: 100%;
+}
+
+.chat-message {
+    background-color: white;
+    margin: 4px;
+    border-radius: 10px;
+    width: 60%;
+}
+
+.message {
+    display: flex;
+    padding: 5px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.message img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: fill;
+}
+
+.message h4 {
+    padding: 5px;
+}
+.message h6 {
+    position: absolute;
+    /* top: 1px; */
+    left: 61%;
+    background-color: silver;
+    border-radius: 5px;
+}
+.online-user img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: fill;
+}
+.online-user h5 {
+    font-size: xx-small;
+    top: 2px;
+}
+.online-users-container {
+    position: absolute;
+    right: 30px;
+    top: 200px;
+    /* background-color: slategray; */
+    max-height: 200px;
+    max-width: 20%;
+}
+
+.delete-acc button {
+    background: rgb(145, 24, 24);
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    justify-content: center;
+    align-self: center;
+}
+
+.delete-acc {
+    position: relative;
+    left: 20px;
 }

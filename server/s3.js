@@ -37,6 +37,24 @@ module.exports.upload = (req, res, next) => {
         .catch((err) => {
             // uh oh
             console.log(" Something wrong with S3", err);
-            res.sendStatus(404);
+            res.sendStatus(500);
         });
+
+    // module.exports.delete = (req, res, next) => {
+    //     const promise = s3
+    //         .deleteObject({
+    //             Bucket: "arizkbucket",
+    //             Key: req.session.userid + "/" + filename,
+    //         })
+    //         .promise();
+    //     promise
+    //         .then(() => {
+    //             console.log("amazon deletion complete :)");
+    //             next();
+    //         })
+    //         .catch((err) => {
+    //             console.log("Something went wrong with delete S3", err);
+    //             res.sendStatus(500);
+    //         });
+    // };
 };

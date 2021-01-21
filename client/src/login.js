@@ -39,7 +39,7 @@ export default class Login extends Component {
                 {this.state.error && (
                     <p>Something is wrong! Please check your input</p>
                 )}
-                <h2>Login</h2>
+                <h2>Sign in</h2>
                 <ul className="form1">
                     <li>
                         <label>
@@ -69,17 +69,17 @@ export default class Login extends Component {
                         <input
                             onClick={(e) => this.handleLogIn(e)}
                             type="submit"
-                            value="Login"
+                            value="SIGN IN"
                         />
                     </li>
+                    <HashRouter>
+                        <h4>
+                            <Link to="/reset-password">
+                                Forgot your password?
+                            </Link>
+                        </h4>
+                    </HashRouter>
                 </ul>
-                <HashRouter>
-                    <>
-                        <Link to="/reset-password">
-                            click here if you forgot your password!
-                        </Link>
-                    </>
-                </HashRouter>
             </div>
         );
     }

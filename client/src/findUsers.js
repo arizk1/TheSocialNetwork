@@ -39,35 +39,58 @@ export default function FindUsers() {
             {!query && (
                 <div>
                     <h2>Here are our most new users, say hi!</h2>
-                    {recentUsers.map((user) => (
-                        <div key={user.id}>
-                            <Link to={`/user/${user.id}`}>
-                                <img src={user.profile_pic} />
-                            </Link>
-                            <Link to={`/user/${user.id}`}>
-                                {user.first} {user.last}
-                            </Link>
-                        </div>
-                    ))}
+                    <div className="friends-container">
+                        {recentUsers.map((user) => (
+                            <div key={user.id} className="card">
+                                <Link to={`/user/${user.id}`}>
+                                    <img
+                                        src={
+                                            user.profile_pic
+                                                ? user.profile_pic
+                                                : "/userdef.png"
+                                        }
+                                    />
+                                </Link>
+                                <Link to={`/user/${user.id}`}>
+                                    <h2>
+                                        {user.first} {user.last}
+                                    </h2>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
+
+            <h3>Search for a specific user here</h3>
             <input
+                className="search"
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search here..."
             />
             {query && (
                 <>
-                    {users.map((all, id) => (
-                        <div key={id}>
-                            <Link to={`/user/${all.id}`}>
-                                <img src={all.profile_pic} />
-                            </Link>
-                            <Link to={`/user/${all.id}`}>
-                                {all.first} {all.last}
-                            </Link>
-                        </div>
-                    ))}
-                    {!users.length && query && <p>Nothing Found</p>}
+                    <div className="friends-container">
+                        {users.map((all, id) => (
+                            <div key={id} className="card">
+                                <Link to={`/user/${all.id}`}>
+                                    <img
+                                        src={
+                                            all.profile_pic
+                                                ? all.profile_pic
+                                                : "../userdef.png"
+                                        }
+                                    />
+                                </Link>
+                                <Link to={`/user/${all.id}`}>
+                                    <h2>
+                                        {all.first} {all.last}
+                                    </h2>
+                                </Link>
+                            </div>
+                        ))}
+                        {!users.length && query && <p>Nothing Found</p>}
+                    </div>
                 </>
             )}
         </section>

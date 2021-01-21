@@ -38,15 +38,19 @@ export default class Uploader extends Component {
         // }
     }
 
+    close() {
+        this.props.toggleUploader;
+    }
+
     render() {
         console.log("this.props in Uploader: ", this.props);
         return (
             <div className="profile-pic-uploader">
                 <div>
                     <h3>Upload new profile picture</h3>
-                    <h5 onClick={(e) => this.handleUpload(e)} className="x">
+                    {/* <h5 onClick={(e) => this.close(e)} className="x">
                         x
-                    </h5>
+                    </h5> */}
                     <input
                         name="image"
                         type="file"

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { receiveUsers, accept, unfriend } from "./action";
+import { receiveUsers, accept, unfriend, cancel, reject } from "./action";
 import { Link } from "react-router-dom";
 
 export default function Friends(props) {
@@ -14,15 +14,17 @@ export default function Friends(props) {
     const wanabes = useSelector(
         (state) =>
             state.friends &&
-            state.friends.filter((user) => user.accepted == false)
+            state.friends.filter(
+                (user) => user.accepted == false && user.recipient_id === userId
+            )
     );
-    // const pending = useSelector(
-    //     (state) =>
-    //         state.friends &&
-    //         state.friends.filter(
-    //             (user) => user.accepted == false && user.id == props.id
-    //         )
-    // );
+    const pending = useSelector(
+        (state) =>
+            state.friends &&
+            state.friends.filter(
+                (user) => user.accepted == false && user.recipient_id !== userId
+            )
+    );
 
     useEffect(() => {
         dispatch(receiveUsers());
@@ -35,26 +37,29 @@ export default function Friends(props) {
 
     return (
         <>
-            <div id="friends">
+            <div className="friends">
                 <h1>Your friends</h1>
                 {friends.length && (
                     <div>
-                        <div className="friend">
+                        <div className="friends-container">
                             {friends.map((user) => (
-                                <div key={user.id}>
+                                <div key={user.id} className="card">
                                     <Link to={`/user/${user.id}`}>
                                         <img src={user.profile_pic} />
                                     </Link>
                                     <Link to={`/user/${user.id}`}>
-                                        {user.first} {user.last}
+                                        <h2>
+                                            {user.first} {user.last}
+                                        </h2>
                                     </Link>
-                                    <div className="buttons">
+                                    <div className="friends-buttons">
                                         <button
+                                            id="unfriend"
                                             onClick={() =>
                                                 dispatch(unfriend(user.id))
                                             }
                                         >
-                                            UNFRIEND
+                                            Unfriend
                                         </button>
                                     </div>
                                 </div>
@@ -68,26 +73,36 @@ export default function Friends(props) {
                     </div>
                 )}
             </div>
-            <div id="wanabes">
-                <h1>Pending requests</h1>
+            <div className="wanabes">
+                <h1>Wannabes requests</h1>
                 {wanabes.length >= 0 && (
                     <div>
-                        <div className="friend">
+                        <div className="friends-container">
                             {wanabes.map((user) => (
-                                <div key={user.id}>
+                                <div key={user.id} className="card">
                                     <Link to={`/user/${user.id}`}>
                                         <img src={user.profile_pic} />
                                     </Link>
                                     <Link to={`/user/${user.id}`}>
-                                        {user.first} {user.last}
+                                        <h2>
+                                            {user.first} {user.last}
+                                        </h2>
                                     </Link>
-                                    <div className="buttons">
+                                    <div className="friends-buttons">
                                         <button
                                             onClick={() =>
                                                 dispatch(accept(user.id))
                                             }
                                         >
-                                            ACCEPT
+                                            Add Friend
+                                        </button>
+                                        <button
+                                            id="remove"
+                                            onClick={() =>
+                                                dispatch(reject(user.id))
+                                            }
+                                        >
+                                            Remove
                                         </button>
                                     </div>
                                 </div>
@@ -96,6 +111,42 @@ export default function Friends(props) {
                     </div>
                 )}
                 {!wanabes.length && (
+                    <div>
+                        <h4>None!</h4>
+                    </div>
+                )}
+            </div>
+            <div className="pending">
+                <h1>Pending requests</h1>
+                {pending.length >= 0 && (
+                    <div>
+                        <div className="friends-container">
+                            {pending.map((user) => (
+                                <div key={user.id} className="card">
+                                    <Link to={`/user/${user.id}`}>
+                                        <img src={user.profile_pic} />
+                                    </Link>
+                                    <Link to={`/user/${user.id}`}>
+                                        <h2>
+                                            {user.first} {user.last}
+                                        </h2>
+                                    </Link>
+                                    <div className="friends-buttons">
+                                        <button
+                                            className="unfriend"
+                                            onClick={() =>
+                                                dispatch(cancel(user.id))
+                                            }
+                                        >
+                                            Cancel Request
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                {!pending.length && (
                     <div>
                         <h4>None!</h4>
                     </div>

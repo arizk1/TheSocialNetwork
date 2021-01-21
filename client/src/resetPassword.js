@@ -61,11 +61,11 @@ export default class ResetPassword extends Component {
 
                     {this.state.view == 1 && (
                         <div>
-                            <h3>
-                                Please enter the email address with which you
-                                registered
-                            </h3>
                             <ul className="form1">
+                                <h4>
+                                    Please enter the email address with which
+                                    you registered.
+                                </h4>
                                 <li>
                                     <label>
                                         Email{" "}
@@ -85,7 +85,7 @@ export default class ResetPassword extends Component {
                                             this.handleEmailCheck(e)
                                         }
                                         type="submit"
-                                        value="submit"
+                                        value="Submit"
                                     />
                                 </li>
                             </ul>
@@ -93,10 +93,11 @@ export default class ResetPassword extends Component {
                     )}
                     {this.state.view == 2 && (
                         <div>
-                            <h3>
-                                Please enter the code you recieved on your email
-                            </h3>
                             <ul className="form1">
+                                <h4>
+                                    Please enter the code you recieved on your
+                                    email
+                                </h4>
                                 <li>
                                     <input
                                         onChange={(e) => this.handleChange(e)}
@@ -120,7 +121,7 @@ export default class ResetPassword extends Component {
                                     <input
                                         onClick={(e) => this.handleSubmit(e)}
                                         type="submit"
-                                        value="submit"
+                                        value="Submit"
                                     />
                                 </li>
                             </ul>
@@ -128,13 +129,15 @@ export default class ResetPassword extends Component {
                     )}
                     {this.state.view == 3 && (
                         <div>
-                            <h3>Success!</h3>
+                            <h1>Success!</h1>
                             <HashRouter>
                                 <div>
-                                    <Link to="/login">
-                                        You can now login with your new
-                                        password!
-                                    </Link>
+                                    <h4>
+                                        {" "}
+                                        You can now{" "}
+                                        <Link to="/login">login</Link> with your
+                                        new password!
+                                    </h4>
                                 </div>
                             </HashRouter>
                         </div>

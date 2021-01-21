@@ -1,5 +1,6 @@
 import { Component } from "react";
 import BioEditor from "./bioEditor";
+import DeleteAccount from "./deleteaccount";
 import ProfilePic from "./profilepic";
 
 export default function Profile({
@@ -18,11 +19,16 @@ export default function Profile({
                     toggleUploader={toggleUploader}
                 />
             </div>
-            <h3>
-                My name is {first} {last}
-            </h3>
+            <div className="profile-name">
+                <h2>
+                    {first} {last}
+                </h2>
 
-            <BioEditor bio={bio} addBio={addBio} />
+                <BioEditor bio={bio} addBio={addBio} />
+            </div>
+            <div>
+                <DeleteAccount />
+            </div>
         </section>
     );
 }

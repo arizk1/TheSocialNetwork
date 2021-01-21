@@ -1,5 +1,6 @@
 import { Component } from "react";
 import axios from "./axios";
+import { Link } from "react-router-dom";
 
 export default class Registration extends Component {
     constructor(props) {
@@ -38,7 +39,8 @@ export default class Registration extends Component {
                 {this.state.error && (
                     <p>Something is wrong! Please check your input</p>
                 )}
-                <h2>Registration</h2>
+
+                <h2>Create Account</h2>
                 <ul className="form1">
                     <li>
                         <label>
@@ -87,8 +89,15 @@ export default class Registration extends Component {
                         <input
                             onClick={(e) => this.handleSubmit(e)}
                             type="submit"
-                            value="Submit"
+                            value="SIGN UP"
                         />
+                        <div className="loginbutton">
+                            <h4>
+                                {" "}
+                                Have already an account?{" "}
+                                <Link to="/login">Login here!</Link>
+                            </h4>
+                        </div>
                     </li>
                 </ul>
             </div>

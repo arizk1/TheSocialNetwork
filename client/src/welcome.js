@@ -7,19 +7,31 @@ import { Link } from "react-router-dom";
 
 export default function Welcome() {
     return (
-        <div>
-            <h1>Welcome to The New World of Social Networks!</h1>
+        <div className="welcome">
+            <div className="welcome-container">
+                <div className="welcome-text">
+                    <h2>Welcome to El Shella!</h2>
 
-            <HashRouter>
-                <div className="loginbutton">
-                    <Link to="/login">Click here to Log in!</Link>
+                    <h4>Have fun and create lasting friendships!</h4>
                 </div>
-                <div>
-                    <Route exact path="/" component={Registration} />
-                    <Route path="/login" component={Login} />
-                    <Route path="/reset-password" component={ResetPassword} />
+
+                {/* <div className="welcome-img">
+                    <img src="/welcomepic.png" />
+                </div> */}
+
+                <div className="welcome-table">
+                    <HashRouter>
+                        <div>
+                            <Route exact path="/" component={Registration} />
+                            <Route path="/login" component={Login} />
+                            <Route
+                                path="/reset-password"
+                                component={ResetPassword}
+                            />
+                        </div>
+                    </HashRouter>
                 </div>
-            </HashRouter>
+            </div>
         </div>
     );
 }

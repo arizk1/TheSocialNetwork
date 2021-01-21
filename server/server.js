@@ -4,12 +4,21 @@
 
 const express = require("express");
 const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server, {
+    allowRequest: (req, callback) =>
+        callback(null, req.headers.referer.startsWith("http://localhost:3000")),
+}); // for Heroku, add ||"webadress from heroku"
 const compression = require("compression");
 const path = require("path");
 const db = require("./db");
 const frindshipsDb = require("./friendshipsDb");
 const { hash, compare } = require("./bc");
 const cookieSession = require("cookie-session");
+const cookieSessionMiddleware = cookieSession({
+    secret: `I'm always angry.`,
+    maxAge: 1000 * 60 * 60 * 24 * 14,
+});
 const csurf = require("csurf");
 const cryptoRandomString = require("crypto-random-string");
 const { sendEmail } = require("./ses");
@@ -54,12 +63,10 @@ const uploader = multer({
     },
 });
 
-app.use(
-    cookieSession({
-        secret: `I'm always angry.`,
-        maxAge: 1000 * 60 * 60 * 24 * 14,
-    })
-);
+app.use(cookieSessionMiddleware);
+io.use(function (socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
 
 app.use(csurf());
 
@@ -189,7 +196,7 @@ app.post("/password/reset/verify", (req, res) => {
 app.get("/user", (req, res) => {
     db.getUserData(req.session.userid)
         .then(({ rows }) => {
-            // console.log(rows);
+            console.log(rows);
             res.json(rows);
         })
         .catch((err) => console.log("error", err));
@@ -240,6 +247,10 @@ app.get(`/user-data/:id`, (req, res) => {
         .catch((err) => console.log("error in getting other profile:", err));
 });
 
+//##################################
+//######     FIND USERS      #######
+//#################################
+
 app.get(`/find/recent/users`, (req, res) => {
     db.getRecentUsers()
         .then(({ rows }) => {
@@ -258,6 +269,10 @@ app.get(`/find/users/:query`, (req, res) => {
         .catch((err) => console.log("error in searching for people", err));
 });
 
+//##################################
+//###### FRIENDSHIP BUTTON  #######
+//#################################
+
 const BUTTON_TEXT = {
     MAKE_REQUEST: "Send Friend Request",
     CANCEL_REQUEST: "Cancel Friend Request",
@@ -271,7 +286,7 @@ app.get("/friendship-status/:otherUserId", (req, res) => {
     frindshipsDb
         .checkStatus(userId, otherUserId)
         .then(({ rows }) => {
-            console.log(rows);
+            // console.log(rows);
             if (!rows[0]) {
                 res.json(BUTTON_TEXT.MAKE_REQUEST);
             }
@@ -328,12 +343,15 @@ app.post("/update/friendship-status", (req, res) => {
     }
 });
 
+//##################################
+//## /FRIENDS /PENDING / WANABES ##
+//#################################
+
 app.get("/get-friends", (req, res) => {
     const userId = req.session.userid;
     frindshipsDb
         .getFriends(userId)
         .then(({ rows }) => {
-            // console.log(rows);
             res.json(rows);
         })
         .catch((err) => console.log("error in .. /get-friends", err));
@@ -361,12 +379,60 @@ app.post("/accept", (req, res) => {
         .catch((err) => console.log("error in .. /accept", err));
 });
 
+app.post("/reject", (req, res) => {
+    const userId = req.session.userid;
+    const { otherUserId } = req.body;
+    frindshipsDb
+        .unfriend(userId, otherUserId)
+        .then(() => {
+            res.json({ success: true });
+        })
+        .catch((err) => console.log("error in .. /reject", err));
+});
+
+app.post("/cancel", (req, res) => {
+    const userId = req.session.userid;
+    const { otherUserId } = req.body;
+    frindshipsDb
+        .cancelRequest(userId, otherUserId)
+        .then(() => {
+            res.json({ success: true });
+        })
+        .catch((err) => console.log("error in .. /cancel", err));
+});
+
+// s3.delete,
+app.post("/delete-account", (req, res) => {
+    const userId = req.session.userid;
+    db.deletefromChat(userId).then(() => {
+        db.deletefriendships(userId).then(() => {
+            db.deletefromusers(userId)
+                .then(() => {
+                    res.json({ success: true });
+                    req.session = null;
+                    res.redirect("/welcome");
+                })
+                .catch((err) => {
+                    console.log("error in db.delete user ", err);
+                });
+        });
+    });
+});
+
+//##################################
+//####   /WELCOME /LOGOUT /*  ######
+//#################################
 app.get("/welcome", (req, res) => {
     if (req.session.userid) {
         res.redirect("/");
     } else {
         res.sendFile(path.join(__dirname, "..", "client", "index.html"));
     }
+});
+
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.sendStatus(200);
 });
 
 app.get("*", function (req, res) {
@@ -377,6 +443,95 @@ app.get("*", function (req, res) {
     }
 });
 
-app.listen(process.env.PORT || 3001, function () {
+server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
+});
+let onlineUsersObj = {};
+let privateList = [];
+let UniqePrivateList = [];
+
+io.on("connection", (socket) => {
+    console.log("---------------------------------------------");
+    console.log(`Socket with id: ${socket.id} is connected`);
+    console.log(`User with id: ${socket.request.session.userid} is connected`);
+    console.log("---------------------------------------------");
+
+    // ########################################
+    // ##########  ONLINE USERS ###############
+    // ########################################
+    const userId = socket.request.session.userid;
+
+    if (!userId) {
+        return socket.disconnect(true);
+    }
+    onlineUsersObj[socket.id] = userId;
+    let onlineUsers = Object.values(onlineUsersObj);
+    db.getUsersByIds(onlineUsers).then(({ rows }) => {
+        io.sockets.emit("onlineUsers", rows);
+    });
+
+    // ########################################
+    // ###########      CHAT    ###############
+    // ########################################
+    socket.on("new chat msg", (message) => {
+        db.addChatMessage(message, socket.request.session.userid)
+            .then(({ rows }) => {
+                const timestamp = rows[0].created_at;
+                const msgId = rows[0].id;
+                db.getUserData(socket.request.session.userid).then(
+                    ({ rows }) => {
+                        io.sockets.emit("new chat msg and user", {
+                            id: msgId,
+                            message: message,
+                            firs: rows[0].first,
+                            last: rows[0].last,
+                            profile_pic: rows[0].profile_pic,
+                            created_at: timestamp,
+                        });
+                    }
+                );
+            })
+            .catch((err) => console.log("error in .. /cancel", err));
+    });
+
+    db.getTenMostRecentMessages()
+        .then(({ rows }) => {
+            socket.emit("10 recent messages", rows);
+        })
+        .catch((err) => {
+            console.error("error in db.getTenMostRecentMessages: ", err);
+        });
+    // ########################################
+    // ###########      CHAT    ###############
+    // ########################################
+
+    db.getPrivateMessageFriendsList(userId).then(({ rows }) => {
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].sender_id !== userId) {
+                privateList.push(rows[i].sender_id);
+            } else if (rows[i].recipient_id !== userId) {
+                privateList.push(rows[i].recipient_id);
+            }
+        }
+        for (let i = 0; i < privateList.length; i++) {
+            if (UniqePrivateList.indexOf(privateList[i]) === -1) {
+                UniqePrivateList.push(privateList[i]);
+            }
+        }
+        db.getUsersByIds(UniqePrivateList).then(({ rows }) => {
+            socket.emit("listOfFriends", rows);
+        });
+    });
+
+    // ########################################
+    // ########      DISCONNECT    ############
+    // ########################################
+    socket.on("disconnect", () => {
+        console.log(`Socket with id: ${socket.id} is disconnected`);
+        delete onlineUsersObj[socket.id];
+        let onlineUsers = Object.values(onlineUsersObj);
+        db.getUsersByIds(onlineUsers).then(({ rows }) => {
+            io.sockets.emit("onlineUsers", rows);
+        });
+    });
 });

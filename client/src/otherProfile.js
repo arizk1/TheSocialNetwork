@@ -30,14 +30,17 @@ export default class OtherProfile extends Component {
         return (
             <>
                 <div className="profile-container">
-                    <img src={this.state.profile_pic} />
+                    <div>
+                        <img src={this.state.profile_pic} />
+                    </div>
+                    <div>
+                        <h3>
+                            {this.state.first} {this.state.last}
+                        </h3>
+                        <p> {this.state.bio} </p>
 
-                    <h3>
-                        {this.state.first} {this.state.last}
-                    </h3>
-                    <p> {this.state.bio} </p>
-
-                    <FriendshipButton otherUserId={this.state.id} />
+                        <FriendshipButton otherUserId={this.state.id} />
+                    </div>
                 </div>
             </>
         );

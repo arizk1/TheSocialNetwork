@@ -29,5 +29,28 @@ CREATE TABLE friendships(
     accepted BOOLEAN DEFAULT false
 );
 
+CREATE TABLE chat_messages(
+    id SERIAL PRIMARY KEY,
+    message VARCHAR NOT NULL CHECK (message != ''),
+    sender_id INT REFERENCES users(id) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE private_messages(
+    id SERIAL PRIMARY KEY,
+    message VARCHAR NOT NULL CHECK (message != ''),
+    sender_id INT REFERENCES users(id) NOT NULL,
+    recipient_id INT REFERENCES users(id) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 
+INSERT INTO chat_messages (sender_id, message) VALUES ('4', 'Yes');
+INSERT INTO chat_messages (sender_id, message) VALUES ('13', 'I can hear you');
+INSERT INTO chat_messages (sender_id, message) VALUES ('20', 'Do you hear me!');
+INSERT INTO chat_messages (sender_id, message) VALUES ('13', 'No');
+
+INSERT INTO private_messages (sender_id, recipient_id, message) VALUES ('204','200', 'Hey!');
+INSERT INTO private_messages (sender_id, recipient_id, message) VALUES ('200','204', 'How are you?');
+INSERT INTO private_messages (sender_id, recipient_id, message) VALUES ('204','100', 'Hey!');
+INSERT INTO private_messages (sender_id, recipient_id, message) VALUES ('100','204', 'Hello!');

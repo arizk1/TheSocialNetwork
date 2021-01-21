@@ -30,3 +30,52 @@ export async function accept(id) {
         };
     }
 }
+
+export async function reject(id) {
+    const { data } = await axios.post("/reject", { otherUserId: id });
+    console.log("data", data);
+    if (data.success) {
+        return {
+            type: "REJECT",
+            id: id,
+        };
+    }
+}
+
+export async function cancel(id) {
+    const { data } = await axios.post("/reject", { otherUserId: id });
+    console.log("data", data);
+    if (data.success) {
+        return {
+            type: "CANCEL_REQUEST",
+            id: id,
+        };
+    }
+}
+
+export async function postNewMessage(userAndMessage) {
+    return {
+        type: "POST_NEW_MESSAGE",
+        userAndMessage: userAndMessage,
+    };
+}
+
+export async function getRecentTenMessages(recentTenMessages) {
+    return {
+        type: "RECENT_TEN_MESSAGES",
+        recentTenMessages: recentTenMessages,
+    };
+}
+
+export async function getOnlineUsers(onlineUsers) {
+    return {
+        type: "ONLINE_USERS",
+        onlineUsers: onlineUsers,
+    };
+}
+export async function getFriendsPrivateMessages(privateList) {
+    return {
+        type: "PRIVATE_LIST",
+        privateList: privateList,
+    };
+}
